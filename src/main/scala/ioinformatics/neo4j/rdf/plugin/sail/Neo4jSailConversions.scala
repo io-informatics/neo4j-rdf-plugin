@@ -4,6 +4,8 @@ import com.tinkerpop.blueprints.KeyIndexableGraph
 import com.tinkerpop.blueprints.impls.neo4j2.Neo4j2Graph
 import com.tinkerpop.blueprints.oupls.sail.GraphSail
 import org.neo4j.graphdb.GraphDatabaseService
+import org.openrdf.repository.RepositoryConnection
+import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.NotifyingSailConnection
 
 /**
@@ -21,6 +23,8 @@ object Neo4jSailConversions {
     }
 
     def sailConnection: NotifyingSailConnection = sail.getConnection
+
+    def repositoryConnection: RepositoryConnection = new SailRepository(sail).getConnection
   }
 
 }
