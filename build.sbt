@@ -1,3 +1,5 @@
+organization := "io-informatics"
+
 name := "neo4j-rdf-plugin"
 
 version := "1.0"
@@ -33,3 +35,18 @@ resolvers in ThisBuild ++= Seq(
 )
 
 net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+// Packaging
+lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging).enablePlugins(UniversalPlugin)
+
+topLevelDirectory := None
+
+exportJars := true
+
+mappings in Universal := {
+  // universalMappings: Seq[(File,String)]
+  val universalMappings = (mappings in Universal).value
+  universalMappings map {
+    case (file, name) =>  file -> name.replaceFirst("lib/","")
+  }
+}
