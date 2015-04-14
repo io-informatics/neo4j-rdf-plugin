@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(
   "org.neo4j.test" % "neo4j-harness" % Neo4jVersion % "test"
 ).map(_.exclude("org.slf4j", "slf4j-log4j12"))
 
-resolvers in ThisBuild ++= Seq(
+resolvers in ThisBuild ++= Seq[Resolver](
   Resolver.mavenLocal,
   Resolver.sonatypeRepo("releases"),
   "Alexander De Leon OSS Maven Repo (Snapshots)" at "http://maven.alexdeleon.name/snapshot",
@@ -37,7 +37,7 @@ resolvers in ThisBuild ++= Seq(
 net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 // Packaging
-lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging).enablePlugins(UniversalPlugin)
+lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging).enablePlugins(UniversalPlugin).enablePlugins(UniversalDeployPlugin)
 
 topLevelDirectory := None
 
@@ -50,3 +50,5 @@ mappings in Universal := {
     case (file, name) =>  file -> name.replaceFirst("lib/","")
   }
 }
+
+publishTo := Some("S3 Snapshots)" at "s3://maven.alexdeleon.name")
