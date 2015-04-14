@@ -31,7 +31,8 @@ resolvers in ThisBuild ++= Seq[Resolver](
   Resolver.mavenLocal,
   Resolver.sonatypeRepo("releases"),
   "Alexander De Leon OSS Maven Repo (Snapshots)" at "http://maven.alexdeleon.name/snapshot",
-  "Alexander De Leon OSS Maven Repo (Release)" at "http://maven.alexdeleon.name/release"
+  "Alexander De Leon OSS Maven Repo (Release)" at "http://maven.alexdeleon.name/release",
+  "restlet-releases" at  "http://maven.restlet.org"
 )
 
 net.virtualvoid.sbt.graph.Plugin.graphSettings
