@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   ("com.tinkerpop.blueprints" % "blueprints-neo4j2-graph" % BlueprintsVersion).excludeAll(ExclusionRule(organization = "org.neo4j")),
   "org.openrdf.sesame" % "sesame-repository-sail" % SesameVersion,
   "com.sun.jersey" % "jersey-core" % "1.9" % "provided",
+  "javax.transaction" % "jta" % "1.1",
   //--- test dependencies
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "junit" % "junit" % "4.11" % "test",
