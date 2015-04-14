@@ -12,7 +12,7 @@ val SesameVersion = "2.7.13"
 
 libraryDependencies ++= Seq(
   "javax.ws.rs" % "javax.ws.rs-api" % "2.0" % "provided",
-  "org.neo4j" % "neo4j" % Neo4jVersion % "provided",
+  "org.neo4j.app" % "neo4j-server" % Neo4jVersion % "provided",
   "com.tinkerpop.blueprints" % "blueprints-sail-graph" % BlueprintsVersion,
   "com.tinkerpop.blueprints" % "blueprints-graph-sail" % BlueprintsVersion,
   ("com.tinkerpop.blueprints" % "blueprints-neo4j2-graph" % BlueprintsVersion).excludeAll(ExclusionRule(organization = "org.neo4j")),
