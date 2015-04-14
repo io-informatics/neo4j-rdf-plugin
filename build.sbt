@@ -52,6 +52,6 @@ mappings in Universal := {
   }
 }
 
-isSnapshot := false
+isSnapshot := true
 
 publishTo := Some("S3 Snapshots)" at "s3://maven.alexdeleon.name/snapshot")
