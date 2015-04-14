@@ -22,7 +22,6 @@ libraryDependencies ++= Seq(
   //--- test dependencies
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "junit" % "junit" % "4.11" % "test",
-  "org.mockito" % "mockito-all" % "1.9.5" % "test",
   "org.neo4j.app" % "neo4j-server" % Neo4jVersion % "test" classifier "tests",
   "org.neo4j" % "neo4j-kernel" % Neo4jVersion % "test" classifier "tests",
   "org.neo4j.test" % "neo4j-harness" % Neo4jVersion % "test"
