@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
  * @author Alexander De Leon <me@alexdeleon.name>
  */
 
-@Path("/rdf")
+@Path("/")
 class RdfResource(@Context neo4j: GraphDatabaseService) {
 
   private val log = LoggerFactory.getLogger(classOf[RdfResource])
