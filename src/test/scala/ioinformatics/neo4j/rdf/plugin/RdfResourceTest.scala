@@ -25,7 +25,7 @@ class RdfResourceTest extends FlatSpec with Matchers {
                                                                          .withExtension("/test", classOf[SparqlResource]).newServer
       try {
         val response: HTTP.Response = HTTP.withHeaders(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).
-          PUT(server.httpURI.resolve("test/rdf").toString, HTTP.RawPayload.rawPayload(payload))
+          PUT(server.httpURI.resolve("test").toString, HTTP.RawPayload.rawPayload(payload))
         response.status should be(200)
 
         val query = "select * where { ?s ?p ?o }"
