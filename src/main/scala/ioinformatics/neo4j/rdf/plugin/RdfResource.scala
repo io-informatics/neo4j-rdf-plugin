@@ -4,6 +4,7 @@ import java.io.InputStream
 import javax.ws.rs._
 import javax.ws.rs.core.{Context, HttpHeaders, MediaType, Response}
 
+import ioinformatics.neo4j.rdf.plugin.optimization.TransactionSplitter
 import ioinformatics.neo4j.rdf.plugin.util.LoadMonitor
 import org.neo4j.graphdb.GraphDatabaseService
 import org.openrdf.model.ValueFactory
@@ -39,10 +40,10 @@ class RdfResource(@Context neo4j: GraphDatabaseService) {
       }
       val loader: RDFLoader = new RDFLoader(repositoryConnection.getParserConfig, valueFactory)
       val baseUri: String = if (context == null) "" else context
-      val aggregatedHandlers: RDFHandler = new RDFHandlerWrapper(rdfInserter, LoadMonitor.withLogging())
-      repositoryConnection.begin()
+      val aggregatedHandlers: RDFHandler = new RDFHandlerWrapper(rdfInserter, LoadMonitor.withLogging()) with TransactionSplitter {
+        val connection = repositoryConnection
+      }
       loader.load(rdfStream, baseUri, RDFFormat.forMIMEType(contentType, RDFFormat.NTRIPLES), aggregatedHandlers)
-      repositoryConnection.commit()
       Response.ok.build
     }
     catch {

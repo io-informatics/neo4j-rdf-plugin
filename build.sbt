@@ -9,6 +9,7 @@ scalaVersion := "2.10.5"
 val Neo4jVersion = "2.1.6"
 val BlueprintsVersion = "2.7.0-SNAPSHOT"
 val SesameVersion = "2.7.13"
+val Cache2kVersion = "0.21"
 
 libraryDependencies ++= Seq(
   "javax.ws.rs" % "javax.ws.rs-api" % "2.0" % "provided",
@@ -19,6 +20,8 @@ libraryDependencies ++= Seq(
   "org.openrdf.sesame" % "sesame-repository-sail" % SesameVersion,
   "com.sun.jersey" % "jersey-core" % "1.9" % "provided",
   "javax.transaction" % "jta" % "1.1",
+  "org.cache2k" % "cache2k-core" % Cache2kVersion,
+  "org.cache2k" % "cache2k-api" % Cache2kVersion,
   //--- test dependencies
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "junit" % "junit" % "4.11" % "test",
