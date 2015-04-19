@@ -3,7 +3,6 @@ package ioinformatics.neo4j.rdf.plugin.optimization
 import org.openrdf.model.Statement
 import org.openrdf.repository.RepositoryConnection
 import org.openrdf.rio.RDFHandler
-import org.openrdf.sail.NotifyingSailConnection
 
 /**
  * @author Alexander De Leon <me@alexdeleon.name>
@@ -11,7 +10,7 @@ import org.openrdf.sail.NotifyingSailConnection
 trait TransactionSplitter extends RDFHandler {
 
   val connection: RepositoryConnection
-  val bufferSize = 100000
+  val bufferSize = 10000
 
   @volatile private var transactionCount = 0
 

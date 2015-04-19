@@ -17,7 +17,7 @@ trait CachingGraphSail[T <: KeyIndexableGraph] extends GraphSail[T] {
   trait CachedDataStore[T <: KeyIndexableGraph] extends  DataStore[T] {
 
     val vertexCache = CacheBuilder.newCache(classOf[Value], classOf[Vertex]).
-      maxSize(10000000).
+      maxSize(100000).
       eternal(true).
       source(super.getVertex _).
       build()
