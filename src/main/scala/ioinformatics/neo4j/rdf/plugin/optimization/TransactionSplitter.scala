@@ -10,7 +10,7 @@ import org.openrdf.rio.RDFHandler
 trait TransactionSplitter extends RDFHandler {
 
   val connection: RepositoryConnection
-  val bufferSize = 10000
+  val bufferSize = 1000
 
   @volatile private var transactionCount = 0
 
