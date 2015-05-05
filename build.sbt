@@ -2,11 +2,11 @@ organization := "io-informatics"
 
 name := "neo4j-rdf-plugin"
 
-version := "1.0"
+version := "1.1"
 
 scalaVersion := "2.10.5"
 
-val Neo4jVersion = "2.1.6"
+val Neo4jVersion = "2.2.1"
 val BlueprintsVersion = "2.7.0-SNAPSHOT"
 val SesameVersion = "2.7.13"
 val Cache2kVersion = "0.21"
