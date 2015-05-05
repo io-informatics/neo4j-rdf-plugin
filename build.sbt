@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "com.tinkerpop.blueprints" % "blueprints-graph-sail" % BlueprintsVersion,
   ("com.tinkerpop.blueprints" % "blueprints-neo4j2-graph" % BlueprintsVersion).excludeAll(ExclusionRule(organization = "org.neo4j")),
   "org.openrdf.sesame" % "sesame-repository-sail" % SesameVersion,
-  "com.sun.jersey" % "jersey-core" % "1.9" % "provided",
+  "com.sun.jersey" % "jersey-core" % "1.18.1" % "provided",
   "javax.transaction" % "jta" % "1.1",
   "org.cache2k" % "cache2k-core" % Cache2kVersion,
   "org.cache2k" % "cache2k-api" % Cache2kVersion,
@@ -27,7 +27,9 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.11" % "test",
   "org.neo4j.app" % "neo4j-server" % Neo4jVersion % "test" classifier "tests",
   "org.neo4j" % "neo4j-kernel" % Neo4jVersion % "test" classifier "tests",
-  "org.neo4j.test" % "neo4j-harness" % Neo4jVersion % "test"
+  "org.neo4j.test" % "neo4j-harness" % Neo4jVersion % "test",
+  "org.neo4j" % "neo4j-io" % Neo4jVersion % "test" classifier "tests",
+  "org.hamcrest" % "hamcrest-all" % "1.3" % "test"
 ).map(_.exclude("org.slf4j", "slf4j-log4j12"))
 
 resolvers in ThisBuild ++= Seq[Resolver](
