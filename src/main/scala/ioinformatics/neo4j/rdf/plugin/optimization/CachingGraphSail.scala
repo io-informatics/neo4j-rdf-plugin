@@ -11,7 +11,12 @@ import CachingGraphSail._
  */
 trait CachingGraphSail[T <: KeyIndexableGraph] extends GraphSail[T] {
 
-  override def createStore(): DataStore[T] = new DataStore[T] with CachedDataStore[T]
+  override def createStore(): DataStore[T] = if(cacheEnabled) {
+    new DataStore[T] with CachedDataStore[T]
+  }
+  else {
+    super.createStore()
+  }
 
   trait CachedDataStore[T <: KeyIndexableGraph] extends  DataStore[T] {
 
@@ -41,4 +46,5 @@ object CachingGraphSail {
     build()
 
   def cacheMaxSize: Int = System.getProperties.getProperty("vertexCache.maxSize", "1000000").toInt
+  def cacheEnabled: Boolean = System.getProperties.getProperty("vertexCache.enabled", "true").toBoolean
 }
