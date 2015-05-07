@@ -17,14 +17,18 @@ trait CachingGraphSail[T <: KeyIndexableGraph] extends GraphSail[T] {
 
   trait CachedDataStore[T <: KeyIndexableGraph] extends  DataStore[T] {
 
-    val vertexCache = CacheBuilder.newCache(classOf[Value], classOf[Object]).
-      name("CachingGraphSail").
-      maxSize(1000000).
-      eternal(true).
-      source((getVertexId _).andThen(_.orNull)).
-      build()
+    abstract override def getVertex(value: Value): Vertex = getVertexById(getFromCache(value))
 
-    abstract override def getVertex(value: Value): Vertex = getVertexById(vertexCache.get(value))
+    private  def getFromCache(key: Value): Object =
+      Option(vertexCache.peek(key))
+      .orElse(getVertexId(key).map(addToCache(key, _)))
+      .orNull
+
+    private def addToCache(key: Value, value: Object): Object = {
+      vertexCache.put(key, value)
+      value
+    }
+
     private def getVertexId(value: Value): Option[Object] = Option(super.getVertex(value)).map(_.getId)
   }
 
@@ -33,7 +37,8 @@ trait CachingGraphSail[T <: KeyIndexableGraph] extends GraphSail[T] {
 }
 
 object CachingGraphSail {
-  implicit  def FunctionAsCacheSource[A,B](f: A=>B): CacheSource[A, B] = new CacheSource[A,B] {
-    override def get(k: A): B = f(k)
-  }
+  val vertexCache = CacheBuilder.newCache(classOf[Value], classOf[Object]).
+    maxSize(1000000).
+    eternal(true).
+    build()
 }
