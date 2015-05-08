@@ -8,7 +8,9 @@ import org.apache.commons.io.IOUtils
 import org.codehaus.jackson.node.ArrayNode
 import org.neo4j.harness.{ServerControls, TestServerBuilders}
 import org.neo4j.test.server.HTTP
+import org.scalatest.time._
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+
 
 /**
  * @author Alexander De Leon <me@alexdeleon.name>
@@ -25,6 +27,7 @@ class RdfPluginTest extends FlatSpec with Matchers with BeforeAndAfter {
   after {
     server.close()
   }
+
 
   "insertRdf" should
     "store the RDF triples on the Neo4J graph" in {
@@ -54,6 +57,27 @@ class RdfPluginTest extends FlatSpec with Matchers with BeforeAndAfter {
     vars.get(2).asText() should be("o")
   }
 
+  it should "insert only one node per URI" in {
+    val payload: String = _10000Triples
+
+    // Given
+    val response1: HTTP.Response = HTTP.withHeaders(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).
+      PUT(server.httpURI.resolve("test").toString, HTTP.RawPayload.rawPayload(payload))
+    response1.status should be(200)
+
+    val response2: HTTP.Response = HTTP.withHeaders(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).
+      PUT(server.httpURI.resolve("test").toString, HTTP.RawPayload.rawPayload(payload))
+    response2.status should be(200)
+
+    val query = "select * where { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.ebi.ac.uk/terms/chembl#Activity> }"
+    val queryResponse: HTTP.Response = HTTP.withHeaders(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+      .POST(server.httpURI.resolve("test/sparql").toString, HTTP.RawPayload.rawPayload(s"query=${urlEncode(query)}"))
+
+    queryResponse.status should be(200)
+    queryResponse.get("results").get("bindings").asInstanceOf[ArrayNode].size() should be(19998)
+  }
+
+
   "executeSparql" should
     "return empty results" in {
     val query = "select * where { ?s ?p ?o }"
@@ -65,7 +89,21 @@ class RdfPluginTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   }
 
-  private def testTriples: String = "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductType> .\n" + "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType1> <http://www.w3.org/2000/01/rdf-schema#label> \"Thing\" ."
+  private def _10000Triples: String = {
+    val input: InputStream = getClass.getResourceAsStream("/test.nt")
+    val buffer: StringBuffer = new StringBuffer
+    import scala.collection.JavaConversions._
+    for (line <- IOUtils.readLines(input)) {
+      buffer.append(line).append("\n")
+    }
+    buffer.toString
+  }
+
+  private def testTriples: String = "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductType> .\n"+
+    "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType1> <http://www.w3.org/2000/01/rdf-schema#label> \"Thing\" ."
+
+  private def repitedTriple: String = "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductType> .\n"+
+    "<http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/ProductType1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/ProductType> ."
 
 
   private def berlin100: String = {

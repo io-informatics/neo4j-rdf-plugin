@@ -6,10 +6,14 @@ import com.tinkerpop.blueprints.{KeyIndexableGraph, Vertex}
 import org.cache2k.{CacheBuilder}
 import org.openrdf.model.{Value}
 import CachingGraphSail._
+import org.slf4j.LoggerFactory
+
 /**
  * @author Alexander De Leon <me@alexdeleon.name>
  */
 trait CachingGraphSail[T <: KeyIndexableGraph] extends GraphSail[T] {
+
+  private val log = LoggerFactory.getLogger(classOf[CachingGraphSail[_]])
 
   override def createStore(): DataStore[T] = if(cacheEnabled) {
     new DataStore[T] with CachedDataStore[T]
@@ -28,6 +32,7 @@ trait CachingGraphSail[T <: KeyIndexableGraph] extends GraphSail[T] {
       .orNull
 
     private def addToCache(key: Value, value: Object): Object = {
+      log.debug(s"Adding to Vertex Cache: $key -> $value")
       vertexCache.put(key, value)
       value
     }
