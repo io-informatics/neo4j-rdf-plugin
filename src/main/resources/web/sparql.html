@@ -1,0 +1,74 @@
+<html>
+
+<head>
+  <link href='//cdn.jsdelivr.net/yasqe/2.5.2/yasqe.min.css' rel='stylesheet' type='text/css' />
+
+  <script src='//cdn.jsdelivr.net/yasqe/2.5.2/yasqe.bundled.min.js'></script>
+  <script src='//underscorejs.org/underscore-min.js'></script>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+</head>
+<body ng-app="app">
+  <h1>Neo4j RDF</h1>
+
+  <main ng-controller="SparqlCtrl">
+    <div class="yasqe"></div>
+    <div id="results">
+      <table ng-show="results" class="table table-striped">
+        <thead>
+          <tr>
+            <th ng-repeat="var in results.head.vars">{{var}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="binding in results.results.bindings">
+            <td ng-repeat="val in values(binding, results.head.vars)">{{val.value}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js'></script>
+  <script type="text/javascript">
+    var app = angular.module('app', []);
+
+    app.directive('yasqe', ['$log', function($log) {
+
+      function link(scope, element, attrs) {
+        var yasqe = YASQE(element, {
+          sparql: {
+            endpoint: '/rdf/sparql',
+            showQueryButton: true,
+            callbacks: {
+              success: function(data) {
+                scope.test = 'TEST';
+                scope.results = data;
+                $log.debug('scope', scope);
+                scope.$apply();
+              }
+            }
+          }
+        });
+      }
+
+      return {
+        restrict: 'C',
+        link: link
+      };
+    }]);
+
+    app.controller('SparqlCtrl', ['$scope', function($scope){
+      $scope.values = function(obj, keys) {
+        var properties = _.map(keys, _.property);
+        return _.map(properties, function(p){
+          return p.call(null, obj);
+        });
+      };
+    }]);
+  </script>
+</body>
+
+</html>

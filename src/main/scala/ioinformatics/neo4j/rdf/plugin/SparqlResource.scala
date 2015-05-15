@@ -1,9 +1,12 @@
 package ioinformatics.neo4j.rdf.plugin
 
+import java.io.ByteArrayInputStream
+import java.nio.charset.Charset
 import javax.ws.rs._
 import javax.ws.rs.core.{Context, MediaType, Response}
 
 import ioinformatics.neo4j.rdf.plugin.writer.SparqlResultsJsonWriter
+import org.apache.commons.io.IOUtils
 import org.neo4j.graphdb.GraphDatabaseService
 import org.openrdf.query.impl.EmptyBindingSet
 import org.openrdf.query.parser.sparql.SPARQLParser
@@ -20,6 +23,14 @@ class SparqlResource(@Context neo4j: GraphDatabaseService) {
   private val log = LoggerFactory.getLogger(classOf[SparqlResource])
 
   import ioinformatics.neo4j.rdf.plugin.wrapper.Neo4jSailWrapper._
+
+  lazy val html: String = loadHtml()
+
+  @GET
+  @Produces(Array(MediaType.TEXT_HTML))
+  def getUI(): Response = {
+    Response.ok(html).`type`(MediaType.TEXT_HTML).build()
+  }
 
   @POST
   @Produces(Array(MediaType.APPLICATION_JSON))
@@ -42,5 +53,10 @@ class SparqlResource(@Context neo4j: GraphDatabaseService) {
         if (connection != null) connection.close()
         Response.serverError().entity(e.getMessage).build()
     }
+  }
+
+  private def loadHtml(): String = {
+    val in = this.getClass.getResourceAsStream("/web/sparql.html")
+    IOUtils.toString(in, Charset.forName("utf-8"))
   }
 }

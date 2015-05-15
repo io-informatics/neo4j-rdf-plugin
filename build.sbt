@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
   "javax.transaction" % "jta" % "1.1",
   "org.cache2k" % "cache2k-core" % Cache2kVersion,
   "org.cache2k" % "cache2k-api" % Cache2kVersion,
+  "commons-io" % "commons-io" % "2.4",
   //--- test dependencies
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "junit" % "junit" % "4.11" % "test",
