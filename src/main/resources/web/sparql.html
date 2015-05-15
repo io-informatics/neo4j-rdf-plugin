@@ -44,9 +44,7 @@
             showQueryButton: true,
             callbacks: {
               success: function(data) {
-                scope.test = 'TEST';
                 scope.results = data;
-                $log.debug('scope', scope);
                 scope.$apply();
               }
             }
